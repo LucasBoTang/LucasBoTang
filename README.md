@@ -40,4 +40,3 @@ A unified framework and benchmarks for decision-focused learning with linear and
   <img src="assets/contributions-compact-light.svg" alt="Daily GitHub contributions in the website’s blue and teal palette" width="640">
 </picture>
 
-<sub>Stars and repository totals cover public, owned, non-fork repositories. Figures refresh daily.</sub>
