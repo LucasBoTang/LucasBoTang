@@ -9,7 +9,12 @@ Postdoctoral Associate at the **Massachusetts Institute of Technology**.
 
 My work draws on machine learning and modern computing to develop reliable and scalable methods and reusable computational frameworks for decision-making.
 
-[Website](https://botang.org) · [Research](https://botang.org/research/) · [Google Scholar](https://scholar.google.com/citations?user=QMzZalQAAAAJ&hl=en) · [Email](mailto:botang@mit.edu)
+<p>
+<a href="https://botang.org"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/link-website-dark.svg"><img src="assets/link-website-light.svg" alt="Website" width="92" height="32"></picture></a>
+<a href="https://botang.org/research/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/link-research-dark.svg"><img src="assets/link-research-light.svg" alt="Research" width="102" height="32"></picture></a>
+<a href="https://scholar.google.com/citations?user=QMzZalQAAAAJ&hl=en"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/link-scholar-dark.svg"><img src="assets/link-scholar-light.svg" alt="Scholar" width="90" height="32"></picture></a>
+<a href="mailto:botang@mit.edu"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/link-email-dark.svg"><img src="assets/link-email-light.svg" alt="Email" width="76" height="32"></picture></a>
+</p>
 
 <picture>
   <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="assets/activity-dark-mobile.svg">
@@ -18,11 +23,4 @@ My work draws on machine learning and modern computing to develop reliable and s
   <img src="assets/activity-light.svg" alt="GitHub activity: contributions over the past year, stars received and original repositories, with a blue and teal daily contribution heatmap" width="100%">
 </picture>
 
-<picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="assets/languages-dark-mobile.svg">
-  <source media="(max-width: 600px)" srcset="assets/languages-light-mobile.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/languages-dark.svg">
-  <img src="assets/languages-light.svg" alt="Language distribution by code bytes in public, owned, non-fork repositories" width="100%">
-</picture>
-
-<sub>Stars and language totals cover my public, non-fork repositories, including archived repositories. Contributions follow GitHub’s calendar. Language share measures code bytes, not proficiency. Figures refresh daily.</sub>
+<sub>Stars and repository totals cover my public, non-fork repositories, including archived repositories. Contributions follow GitHub’s calendar. Figures refresh daily.</sub>

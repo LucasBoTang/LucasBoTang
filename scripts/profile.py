@@ -1,10 +1,8 @@
 """Generate self-contained profile figures from GitHub data. No hosted widgets."""
 import argparse
-import concurrent.futures
 import datetime as dt
 import html
 import json
-import math
 from pathlib import Path
 import subprocess
 
@@ -37,11 +35,6 @@ def collect():
             break
         page += 1
     original = [r for r in repos if not r['fork'] and not r['private']]
-    totals = {}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-        for languages in pool.map(lambda r: api(f"repos/{r['full_name']}/languages"), original):
-            for language, count in languages.items():
-                totals[language] = totals.get(language, 0) + count
     query = '''query { user(login: "LucasBoTang") { contributionsCollection {
       contributionCalendar { totalContributions weeks { contributionDays {
         date contributionCount contributionLevel
@@ -53,9 +46,7 @@ def collect():
         'followers': user['followers'],
         'repositories': len(original),
         'stars': sum(r['stargazers_count'] for r in original),
-        'languages': dict(sorted(totals.items(), key=lambda p: (-p[1], p[0]))),
         'calendar': calendar,
-        'language_scope': 'Public, owned, non-fork repositories; GitHub language bytes; includes archived repositories.',
     }
     # Store only public aggregates, never credentials or private repository metadata.
     (ROOT / 'assets/data.json').write_text(json.dumps(data, indent=2) + '\n', encoding='utf-8')
@@ -117,14 +108,21 @@ def save(name, width, height, title, desc, elements, p):
 def render(data):
     days = [d for w in data['calendar']['weeks'] for d in w['contributionDays']]
     assert sum(d['contributionCount'] for d in days) == data['calendar']['totalContributions']
-    total_bytes = sum(data['languages'].values())
-    language_rows = list(data['languages'].items())[:5]
-    remainder = total_bytes - sum(v for _, v in language_rows)
-    if remainder:
-        language_rows.append(('Other', remainder))
     date = data['updated'][:10]
     for mode in ('dark', 'light'):
         p = palette(mode)
+        # All four links use the same 18px icon grid, stroke and outlined Geist label.
+        icons = {
+            'website': ('Website', 92, '<circle cx="9" cy="9" r="8"/><ellipse cx="9" cy="9" rx="3.5" ry="8"/><path d="M1 9h16"/>'),
+            'research': ('Research', 102, '<path d="m4 4 10 1M4 4l4 10m6-9-6 9"/><circle cx="4" cy="4" r="2.3"/><circle cx="14" cy="5" r="2.3"/><circle cx="8" cy="14" r="2.3"/>'),
+            'scholar': ('Scholar', 90, '<path d="m1 7 8-4 8 4-8 4-8-4Zm3 2v5q5 4 10 0V9m3-2v7"/>'),
+            'email': ('Email', 76, '<rect x="1" y="3" width="16" height="12" rx="2"/><path d="m2 4 7 6 7-6"/>'),
+        }
+        for name, (label, width, icon) in icons.items():
+            svg = (f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="32" viewBox="0 0 {width} 32" role="img" aria-label="{label}">'
+                   f'<title>{label}</title><g transform="translate(0 7)" fill="none" stroke="{p["accent"]}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">{icon}</g>'
+                   + text(25, 21, label, 14, p['accent']) + '</svg>')
+            (ROOT / f'assets/link-{name}-{mode}.svg').write_text(svg, encoding='utf-8')
         for mobile in (False, True):
             width = 440 if mobile else 880
             pad = 24 if mobile else 36
@@ -181,30 +179,6 @@ def render(data):
             save(f'activity-{suffix}', width, height, 'GitHub activity',
                  f'{data["calendar"]["totalContributions"]} contributions in the past year. {data["stars"]} stars across {data["repositories"]} owned public non-fork repositories. Updated {date} UTC.', e, p)
 
-            # Horizontal bars share a zero baseline and encode exact code-byte percentages.
-            height = 386 if mobile else 360
-            e = [t(pad, 45, 'Languages in code', 25 if mobile else 29, font='bodoni-moda'),
-                 t(pad, 73, 'Public, owned, non-fork repositories', 12 if mobile else 14, p['muted'])]
-            x0 = pad if mobile else 225
-            bar_width = width - x0 - pad - (0 if mobile else 85)
-            maxpct = max((v / total_bytes for _, v in language_rows), default=1)
-            # Axis ends at 100%; proportions never normalized to the largest language.
-            for i, (name, count) in enumerate(language_rows):
-                y = 105 + i * (39 if mobile else 34)
-                pct = count / total_bytes * 100
-                color = p['bars'][i]
-                if mobile:
-                    e += [t(pad, y, name, 14), t(width - pad, y, f'{pct:.1f}%', 13, color, 'geist-mono', 'end'),
-                          rect(pad, y + 8, bar_width, 5, p['rule']), rect(pad, y + 8, bar_width * pct / 100, 5, color)]
-                else:
-                    e += [t(pad, y + 8, name, 15), rect(x0, y - 6, bar_width, 11, p['rule']),
-                          rect(x0, y - 6, bar_width * pct / 100, 11, color),
-                          t(width - pad, y + 5, f'{pct:.1f}%', 15, color, 'geist-mono', 'end')]
-            e.append(line(pad, height - 63, width - pad, height - 63, p['rule']))
-            e.append(t(pad, height - 38, 'Share of code bytes, not proficiency.', 12 if mobile else 13, p['muted']))
-            e.append(t(pad, height - 17, f'GitHub Linguist · updated {date} UTC', 11, p['muted'], 'geist-mono'))
-            save(f'languages-{suffix}', width, height, 'Languages in code',
-                 '; '.join(f'{n}: {v / total_bytes:.1%}' for n, v in language_rows) + '. ' + data['language_scope'], e, p)
 
 
 if __name__ == '__main__':
@@ -213,4 +187,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     data = collect() if args.refresh else json.loads((ROOT / 'assets/data.json').read_text(encoding='utf-8'))
     render(data)
-    print(f'Generated 12 SVG assets from GitHub data updated {data["updated"]}.')
+    print(f'Generated 16 SVG assets from GitHub data updated {data["updated"]}.')

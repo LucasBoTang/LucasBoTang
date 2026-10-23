@@ -1,24 +1,8 @@
 {
-  "updated": "2026-10-23T17:15:41.727477+00:00",
+  "updated": "2026-10-23T17:19:16.239679+00:00",
   "followers": 196,
   "repositories": 39,
   "stars": 338,
-  "languages": {
-    "Jupyter Notebook": 47976199,
-    "Python": 1424302,
-    "MATLAB": 828793,
-    "TypeScript": 539382,
-    "Astro": 314201,
-    "Makefile": 226400,
-    "JavaScript": 161980,
-    "C++": 124945,
-    "CSS": 21213,
-    "Racket": 13650,
-    "CMake": 10981,
-    "HTML": 3437,
-    "Java": 2525,
-    "Shell": 538
-  },
   "calendar": {
     "totalContributions": 2454,
     "weeks": [
@@ -699,12 +683,12 @@
           },
           {
             "date": "2026-02-17",
-            "contributionCount": 83,
+            "contributionCount": 84,
             "contributionLevel": "FOURTH_QUARTILE"
           },
           {
             "date": "2026-02-18",
-            "contributionCount": 56,
+            "contributionCount": 55,
             "contributionLevel": "FOURTH_QUARTILE"
           },
           {
@@ -1430,13 +1414,13 @@
         "contributionDays": [
           {
             "date": "2026-06-28",
-            "contributionCount": 26,
+            "contributionCount": 28,
             "contributionLevel": "SECOND_QUARTILE"
           },
           {
             "date": "2026-06-29",
-            "contributionCount": 17,
-            "contributionLevel": "SECOND_QUARTILE"
+            "contributionCount": 15,
+            "contributionLevel": "FIRST_QUARTILE"
           },
           {
             "date": "2026-06-30",
@@ -1913,12 +1897,12 @@
           },
           {
             "date": "2026-09-23",
-            "contributionCount": 4,
+            "contributionCount": 5,
             "contributionLevel": "FIRST_QUARTILE"
           },
           {
             "date": "2026-09-24",
-            "contributionCount": 17,
+            "contributionCount": 16,
             "contributionLevel": "SECOND_QUARTILE"
           },
           {
@@ -2085,6 +2069,5 @@
         ]
       }
     ]
-  },
-  "language_scope": "Public, owned, non-fork repositories; GitHub language bytes; includes archived repositories."
+  }
 }
