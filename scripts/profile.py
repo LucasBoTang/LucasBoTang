@@ -99,7 +99,7 @@ def palette(mode):
 def save(name, width, height, title, desc, elements, p):
     content = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" role="img" aria-labelledby="title desc">
 <title id="title">{html.escape(title)}</title><desc id="desc">{html.escape(desc)}</desc>
-{rect(0, 0, width, height, p['bg'], 8)}
+
 {''.join(elements)}
 </svg>'''
     (ROOT / f'assets/{name}.svg').write_text(content, encoding='utf-8')
@@ -123,62 +123,48 @@ def render(data):
                    f'<title>{label}</title><g transform="translate(0 7)" fill="none" stroke="{p["accent"]}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">{icon}</g>'
                    + text(25, 21, label, 14, p['accent']) + '</svg>')
             (ROOT / f'assets/link-{name}-{mode}.svg').write_text(svg, encoding='utf-8')
-        for mobile in (False, True):
-            width = 440 if mobile else 880
-            pad = 24 if mobile else 36
-            suffix = f'{mode}' + ('-mobile' if mobile else '')
-            t = lambda x, y, value, size=16, color=None, font='geist', anchor='start': text(x, y, value, size, color or p['fg'], font, anchor)
-            # The personal site's typographic signature, without duplicating project pins.
-            e = [t(pad, 90, 'Bo Tang', 72 if mobile else 88, font='bodoni-moda'),
-                 t(pad, 130, 'Operations research & machine learning', 16 if mobile else 21, p['muted'])]
-            for j in range(3):
-                e.append(rect(width - pad - 36 + j * 12, 38, 5, 14, p['accent']))
-            save(f'header-{suffix}', width, 164, 'Bo Tang', 'Operations research and machine learning.', e, p)
+        t = lambda x, y, value, size=16, color=None, font='geist', anchor='start': text(x, y, value, size, color or p['fg'], font, anchor)
+        # Fixed intrinsic dimensions: GitHub may shrink these, but must never enlarge them.
+        e = [t(0, 44, 'Bo Tang', 44, font='bodoni-moda'),
+             t(0, 72, 'Operations research & machine learning', 13, p['muted'])]
+        save(f'identity-compact-{mode}', 360, 82, 'Bo Tang', 'Operations research and machine learning.', e, p)
 
-            # GitHub's actual daily contribution counts, coloured using research figure tones.
-            height = 395 if mobile else 375
-            e = [t(pad, 45, 'Open-source activity', 25 if mobile else 29, font='bodoni-moda')]
-            metrics = [(data['calendar']['totalContributions'], 'Contributions'),
-                       (data['stars'], 'Stars received'), (data['repositories'], 'Original repos')]
-            col = (width - 2 * pad) / 3
-            for i, (value, label) in enumerate(metrics):
-                x = pad + i * col
-                e += [t(x, 100, f'{value:,}', 30 if mobile else 38, p['accent'], 'geist-mono'),
-                      t(x, 125, label, 12 if mobile else 15, p['muted'])]
-            e.append(line(pad, 146, width - pad, 146, p['rule']))
-            e.append(t(pad, 172, 'Contributions / past year', 13, p['muted'], 'geist-mono'))
-            weeks = data['calendar']['weeks']
-            step = (width - pad * 2) / len(weeks)
-            cell = step - (2 if mobile else 3)
-            grid_y = 211
-            seen_month = None
-            levels = ['NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE']
-            for wi, week in enumerate(weeks):
-                first = dt.date.fromisoformat(week['contributionDays'][0]['date'])
-                if first.month != seen_month:
-                    if wi < len(weeks) - 3 and (not mobile or first.month % 2 == 1):
-                        e.append(t(pad + wi * step, 198, first.strftime('%b'), 10 if mobile else 12, p['muted'], 'geist-mono'))
-                    seen_month = first.month
-                for day in week['contributionDays']:
-                    when = dt.date.fromisoformat(day['date'])
-                    row = (when.weekday() + 1) % 7
-                    level = levels.index(day['contributionLevel'])
-                    e.append(f'<g><title>{day["date"]}: {day["contributionCount"]} contributions</title>' +
-                             rect(round(pad + wi * step, 2), round(grid_y + row * step, 2), round(cell, 2), round(cell, 2), p['levels'][level], 1) + '</g>')
-            legend_y = 282 if mobile else 352
-            e.append(t(pad, legend_y, 'Less', 11, p['muted'], 'geist-mono'))
-            for i, color in enumerate(p['levels']):
-                e.append(rect(pad + 37 + i * 14, legend_y - 10, 10, 10, color, 1))
-            e.append(t(pad + 114, legend_y, 'More', 11, p['muted'], 'geist-mono'))
-            if mobile:
-                e += [t(pad, 320, f'{days[0]["date"]} — {days[-1]["date"]}', 12, p['muted'], 'geist-mono'),
-                      t(pad, 346, 'Stars & repos: owned public non-forks.', 12, p['muted']),
-                      t(pad, 372, f'Updated {date} UTC', 11, p['muted'], 'geist-mono')]
-            else:
-                e.append(t(width - pad, 352, f'{days[0]["date"]} — {days[-1]["date"]}', 11, p['muted'], 'geist-mono', 'end'))
-            save(f'activity-{suffix}', width, height, 'GitHub activity',
-                 f'{data["calendar"]["totalContributions"]} contributions in the past year. {data["stars"]} stars across {data["repositories"]} owned public non-fork repositories. Updated {date} UTC.', e, p)
+        metrics = [(data['calendar']['totalContributions'], 'Contributions / year'),
+                   (data['stars'], 'Stars received'), (data['repositories'], 'Original repos')]
+        e = []
+        for i, (value, label) in enumerate(metrics):
+            x = i * 180
+            e += [t(x, 27, f'{value:,}', 25, p['accent'], 'geist-mono'),
+                  t(x, 50, label, 12, p['muted'])]
+        save(f'stats-compact-{mode}', 540, 62, 'GitHub statistics',
+             f'{data["calendar"]["totalContributions"]} contributions in the past year. {data["stars"]} stars across {data["repositories"]} owned public non-fork repositories.', e, p)
 
+        width, pad, grid_y = 640, 2, 22
+        weeks = data['calendar']['weeks']
+        step = (width - 2 * pad) / len(weeks)
+        cell = step - 2
+        e = []
+        seen_month = None
+        levels = ['NONE', 'FIRST_QUARTILE', 'SECOND_QUARTILE', 'THIRD_QUARTILE', 'FOURTH_QUARTILE']
+        for wi, week in enumerate(weeks):
+            first = dt.date.fromisoformat(week['contributionDays'][0]['date'])
+            if first.month != seen_month:
+                if wi < len(weeks) - 3:
+                    e.append(t(pad + wi * step, 12, first.strftime('%b'), 10, p['muted'], 'geist-mono'))
+                seen_month = first.month
+            for day in week['contributionDays']:
+                when = dt.date.fromisoformat(day['date'])
+                row = (when.weekday() + 1) % 7
+                level = levels.index(day['contributionLevel'])
+                e.append(f'<g><title>{day["date"]}: {day["contributionCount"]} contributions</title>' +
+                         rect(round(pad + wi * step, 2), round(grid_y + row * step, 2), round(cell, 2), round(cell, 2), p['levels'][level], 1) + '</g>')
+        e.append(t(pad, 123, 'Less', 10, p['muted'], 'geist-mono'))
+        for i, color in enumerate(p['levels']):
+            e.append(rect(33 + i * 12, 114, 9, 9, color, 1))
+        e.append(t(99, 123, 'More', 10, p['muted'], 'geist-mono'))
+        e.append(t(width - pad, 123, f'Updated {date} UTC', 10, p['muted'], 'geist-mono', 'end'))
+        save(f'contributions-compact-{mode}', width, 132, 'Contribution calendar',
+             f'{data["calendar"]["totalContributions"]} contributions. {days[0]["date"]} to {days[-1]["date"]}. Updated {date} UTC.', e, p)
 
 
 if __name__ == '__main__':
@@ -187,4 +173,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     data = collect() if args.refresh else json.loads((ROOT / 'assets/data.json').read_text(encoding='utf-8'))
     render(data)
-    print(f'Generated 16 SVG assets from GitHub data updated {data["updated"]}.')
+    print(f'Generated 14 SVG assets from GitHub data updated {data["updated"]}.')

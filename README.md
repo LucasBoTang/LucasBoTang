@@ -1,8 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="assets/header-dark-mobile.svg">
-  <source media="(max-width: 600px)" srcset="assets/header-light-mobile.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/header-dark.svg">
-  <img src="assets/header-light.svg" alt="Bo Tang — Operations research and machine learning" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/identity-compact-dark.svg">
+  <img src="assets/identity-compact-light.svg" alt="Bo Tang — Operations research and machine learning" width="360">
 </picture>
 
 Postdoctoral Associate at the **Massachusetts Institute of Technology**.
@@ -16,11 +14,30 @@ My work draws on machine learning and modern computing to develop reliable and s
 <a href="mailto:botang@mit.edu"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/link-email-dark.svg"><img src="assets/link-email-light.svg" alt="Email" width="76" height="32"></picture></a>
 </p>
 
+### Selected publications
+
+**[H-PDLP: GPU-Accelerated Linear Programming via Generalized PDHG and Homogeneous Self-Dual Embedding](https://arxiv.org/abs/2610.17695)**<br>
+Haihao Lu and Bo Tang · *arXiv, 2026*<br>
+Matrix-free GPU computation of solutions and infeasibility certificates for large-scale linear programs. [Code](https://github.com/MIT-Lu-Lab/H-PDLP)
+
+**[Learning to Optimize for Mixed-Integer Non-linear Programming with Feasibility Guarantees](https://arxiv.org/abs/2410.11061)**<br>
+Bo Tang, Elias B. Khalil and Ján Drgoňa · *arXiv, 2024*<br>
+Solver-free learning for parametric mixed-integer nonlinear optimization, with differentiable integer correction and feasibility projection. [REINS](https://github.com/LucasBoTang/REINS)
+
+**[PyEPO: a PyTorch-based end-to-end predict-then-optimize library for linear and integer programming](https://link.springer.com/article/10.1007/s12532-024-00255-x)**<br>
+Bo Tang and Elias B. Khalil · *Mathematical Programming Computation, 2024*<br>
+A unified framework and benchmarks for decision-focused learning with linear and integer optimization. [Code](https://github.com/khalil-research/PyEPO) · [Documentation](https://khalil-research.github.io/PyEPO/)
+
+### Open-source activity
+
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 600px)" srcset="assets/activity-dark-mobile.svg">
-  <source media="(max-width: 600px)" srcset="assets/activity-light-mobile.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/activity-dark.svg">
-  <img src="assets/activity-light.svg" alt="GitHub activity: contributions over the past year, stars received and original repositories, with a blue and teal daily contribution heatmap" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/stats-compact-dark.svg">
+  <img src="assets/stats-compact-light.svg" alt="GitHub statistics: contributions in the past year, stars received and original repositories" width="540">
 </picture>
 
-<sub>Stars and repository totals cover my public, non-fork repositories, including archived repositories. Contributions follow GitHub’s calendar. Figures refresh daily.</sub>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/contributions-compact-dark.svg">
+  <img src="assets/contributions-compact-light.svg" alt="Daily GitHub contributions in the website’s blue and teal palette" width="640">
+</picture>
+
+<sub>Stars and repository totals cover public, owned, non-fork repositories. Figures refresh daily.</sub>
